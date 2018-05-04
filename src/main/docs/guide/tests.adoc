@@ -52,7 +52,7 @@ include::{sourceDir}/src/test/groovy/demo/LoginPage.groovy[]
 Create a tests which verifies the user authentication flow.
 
 [source,groovy]
-.src/test/groovy/demo/SessionAuthenticationSpec.groovy
+.src/test/groovy/demo/AuthenticationSpec.groovy
 ----
-include::{sourceDir}/src/test/groovy/demo/SessionAuthenticationSpec.groovy[]
+include::{sourceDir}/src/test/groovy/demo/AuthenticationSpec.groovy[]
 ----

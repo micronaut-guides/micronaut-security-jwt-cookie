@@ -2,16 +2,18 @@ micronaut:
   security:
     enabled: true # <1>
     endpoints:
-      login: true # <2>
-      logout: true # <3>
+      login:
+        enabled: true # <2>
+      logout:
+        enabled: true # <3>
     token:
       jwt:
-        enabled: true # <5>
+        enabled: true # <4>
         bearer:
-          enabled: false
+          enabled: false # <5>
         cookie:
-          enabled: true
-          loginFailureTargetUrl: /login/authFailed
-        generator:
-          signature:
-            secret: qrD6h8K6S9503Q06Y6Rfk21TErImPYqa # <7>
+          enabled: true # <6>
+          loginFailureTargetUrl: /login/authFailed  # <7>
+        signatures:
+          generator: # <9>
+            secret: qrD6h8K6S9503Q06Y6Rfk21TErImPYqa # <9>
