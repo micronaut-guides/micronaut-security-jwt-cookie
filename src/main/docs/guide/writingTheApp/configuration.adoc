@@ -13,18 +13,5 @@ include::{sourceDir}/src/main/resources/application.yml[]
 <5> Disable Bearer Token support.
 <6> Enable Cookie Token support.
 <7> If the login fails, redirect him to /login/authFailed
-<8> Create a http://docs.micronaut.io/api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] named `generator` which is used to sign the JWT claims.
+<8> You can create a http://docs.micronaut.io/api/io/micronaut/security/token/jwt/signature/secret/SecretSignatureConfiguration.html[SecretSignatureConfiguration] named `generator` via configuration as illustrated above. The `generator` signature is used to sign the issued JWT claims.
 <9> Change this by your own secret and keep it safe.
-
-To use Yaml, in your configuration file add the yaml dependency to `build.gradle`.
-
-[source,groovy]
-.build.gradle
-----
-dependencies {
-...
-..
-.
-include::{sourceDir}/build.gradle[tag=yaml]
-}
-----

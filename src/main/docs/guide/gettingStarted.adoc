@@ -1,2 +1,6 @@
 In this guide you are going to setup JWT based authentication and configure it so that
 JWT tokens are transported and read via Cookies.
+
+The following sequence illustrates the authentication flow:
+
+image::jwt-cookie.svg[]

@@ -1,14 +1,8 @@
-package demo
+package example.micronaut
 
 import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.exceptions.NoSuchBeanException
 import io.micronaut.runtime.server.EmbeddedServer
-import io.micronaut.security.endpoints.LoginController
-import io.micronaut.security.endpoints.LogoutController
-import io.micronaut.security.token.jwt.bearer.BearerTokenReader
-import io.micronaut.security.token.jwt.cookie.JwtCookieLoginHandler
-import io.micronaut.security.token.jwt.cookie.JwtCookieClearerLogoutHandler
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 
