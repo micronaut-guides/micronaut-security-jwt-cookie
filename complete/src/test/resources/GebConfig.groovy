@@ -5,12 +5,12 @@ import org.openqa.selenium.firefox.FirefoxOptions
 
 environments {
 
-    // run via “./gradlew -Dgeb.env=chrome iT”
+    // run via “./gradlew -Dgeb.env=chrome test”
     chrome {
         driver = { new ChromeDriver() }
     }
 
-    // run via “./gradlew -Dgeb.env=chromeHeadless iT”
+    // run via “./gradlew -Dgeb.env=chromeHeadless test”
     chromeHeadless {
         driver = {
             ChromeOptions o = new ChromeOptions()
@@ -27,7 +27,7 @@ environments {
         }
     }
 
-    // run via “./gradlew -Dgeb.env=firefox iT”
+    // run via “./gradlew -Dgeb.env=firefox test”
     firefox {
         driver = { new FirefoxDriver() }
     }

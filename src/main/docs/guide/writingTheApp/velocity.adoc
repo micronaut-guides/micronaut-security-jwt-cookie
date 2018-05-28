@@ -22,13 +22,13 @@ include::{sourceDir}/build.gradle[tag=velocity]
 
 Create two velocity templates:
 
-[source,groovy]
+[source,html]
 .src/main/resources/templates/home.vm
 ----
 include::{sourceDir}/src/main/resources/templates/home.vm[]
 ----
 
-[source,groovy]
+[source,html]
 .src/main/resources/templates/auth.vm
 ----
 include::{sourceDir}/src/main/resources/templates/auth.vm[]
@@ -36,12 +36,10 @@ include::{sourceDir}/src/main/resources/templates/auth.vm[]
 
 To render those templates, create `VelocityService.java`
 
-[source,groovy]
+[source,java]
 .src/main/java/example/micronaut/services/VelocityService.java
 ----
 include::{sourceDir}/src/main/java/example/micronaut/services/VelocityService.java[]
 ----
-
-
 <1> To create a Sigleton bean use the `javax.inject.Singleton` annotation.
 <2> Use the `javax.annotation.PostConstruct` annotation to trigger the method execution after dependency injection is done. Typically to perform any initialization.
