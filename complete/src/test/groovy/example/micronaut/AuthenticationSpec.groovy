@@ -14,6 +14,7 @@ class AuthenticationSpec extends GebSpec {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer)
 
+    @IgnoreIf({ !sys['geb.env'] })
     def "verify session based authentication works"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
