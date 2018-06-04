@@ -6,6 +6,25 @@ export EXIT_STATUS=0
 ./gradlew -Dgeb.env=firefoxHeadless complete:test || EXIT_STATUS=$?
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
+
+  ./gradlew -Dgeb.env=chromeHeadless -DIGNORE_FAILURES=true complete:test
+
+  git clone https://${GH_TOKEN}@github.com/micronaut-guides/micronaut-security-jwt-cookie.git -b gh-pages gh-pages --single-branch > /dev/null
+
+  cd gh-pages
+
+  mkdir -p reports
+
+  cp -r ../build/reports/. ./reports/
+
+  git add reports/*
+
+  git commit -a -m "Updating reports for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID" && {
+    git push origin HEAD || true
+  }
+  cd ..
+  rm -rf gh-pages
+
   exit $EXIT_STATUS
 fi
 

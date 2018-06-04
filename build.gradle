@@ -8,3 +8,11 @@ asciidoctorj {
 
 apply from:"https://raw.githubusercontent.com/micronaut-projects/micronaut-guides/master/gradle/guide-build.gradle"
 
+allprojects {
+
+    if ( System.getProperty('IGNORE_FAILURES') != null && Boolean.valueOf(System.getProperty('IGNORE_FAILURES'))) {
+        tasks.withType(Test) {
+            ignoreFailures = true
+        }
+    }
+}
