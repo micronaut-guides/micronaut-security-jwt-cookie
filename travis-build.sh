@@ -17,7 +17,7 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
 
   mkdir -p reports
 
-  cp -r ../build/reports/. ./reports/
+  cp -r ../complete/build/reports/. ./reports/
 
   git add reports/*
 
