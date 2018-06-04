@@ -3,8 +3,9 @@ set -e
 
 export EXIT_STATUS=0
 
+./gradlew --stop
 ./gradlew clean
-./gradlew -Dgeb.env=chromeHeadless complete:test  || EXIT_STATUS=$?
+./gradlew -Dgeb.env=chromeHeadless complete:check --no-daemon || EXIT_STATUS=$?
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
 
@@ -23,6 +24,8 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
   }
   cd ..
   rm -rf gh-pages
+
+  echo "You can check reports: https://micronaut-guides.github.io/micronaut-security-jwt-cookie/reports/tests/test/index.html"
 
   exit 1
 
