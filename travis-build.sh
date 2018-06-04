@@ -7,6 +7,8 @@ export EXIT_STATUS=0
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
 
+  echo "Test Failed, running whole test suite ignoring failures"
+
   ./gradlew -Dgeb.env=chromeHeadless -DIGNORE_FAILURES=true complete:test
 
   git clone https://${GH_TOKEN}@github.com/micronaut-guides/micronaut-security-jwt-cookie.git -b gh-pages gh-pages --single-branch > /dev/null
