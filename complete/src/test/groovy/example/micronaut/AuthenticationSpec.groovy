@@ -24,6 +24,9 @@ class AuthenticationSpec extends GebSpec {
         then:
         at HomePage
 
+        and:
+        false
+
         when:
         HomePage homePage = browser.page HomePage
 

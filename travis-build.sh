@@ -3,15 +3,10 @@ set -e
 
 export EXIT_STATUS=0
 
-./gradlew -Dgeb.env=chromeHeadless complete:test || EXIT_STATUS=$?
-
-echo "exit status $EXIT_STATUS"
+./gradlew clean
+./gradlew -Dgeb.env=chromeHeadless complete:test  || EXIT_STATUS=$?
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
-
-  echo "Test Failed, running whole test suite ignoring failures"
-
-  ./gradlew -Dgeb.env=chromeHeadless -DIGNORE_FAILURES=true complete:test
 
   git clone https://${GH_TOKEN}@github.com/micronaut-guides/micronaut-security-jwt-cookie.git -b gh-pages gh-pages --single-branch > /dev/null
 
@@ -29,7 +24,8 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
   cd ..
   rm -rf gh-pages
 
-  exit $EXIT_STATUS
+  exit 1
+
 fi
 
 if [[ $EXIT_STATUS -eq 0 ]]; then
