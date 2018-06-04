@@ -3,7 +3,7 @@ set -e
 
 export EXIT_STATUS=0
 
-./gradlew -Dgeb.env=firefoxHeadless complete:test || EXIT_STATUS=$?
+./gradlew -Dgeb.env=chromeHeadless complete:test || EXIT_STATUS=$?
 
 echo "exit status $EXIT_STATUS"
 
