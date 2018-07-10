@@ -83,8 +83,8 @@ compileTestJava.options.compilerArgs += '-parameters'
 
 //tag::webdriverBinaries[]
 webdriverBinaries {
-    chromedriver '2.38'
-    geckodriver '0.20.1'
+    chromedriver '2.40'
+    geckodriver '0.21.0'
 }
 //end::webdriverBinaries[]
 
