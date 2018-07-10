@@ -40,7 +40,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.micronaut:bom:$micronautVersion'
+        mavenBom "io.micronaut:bom:$micronautVersion"
     }
 }
 
@@ -76,6 +76,8 @@ dependencies {
 shadowJar {
     mergeServiceFiles()
 }
+
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
 mainClassName = "example.Application"
 compileJava.options.compilerArgs += '-parameters'
