@@ -58,6 +58,7 @@ dependencies {
     compile "io.micronaut:security-jwt"
 //end::securitydependency[]
 //tag::velocity[]
+    compile "io.micronaut:views"
     compile "org.apache.velocity:velocity-engine-core:2.0"
 //end::velocity[]
 //tag::geb[]
