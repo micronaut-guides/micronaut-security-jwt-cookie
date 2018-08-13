@@ -1,1 +1,1 @@
-include::{commondir}/common-howto.adoc[]
+include::{commondir}/common-completesolution.adoc[]
