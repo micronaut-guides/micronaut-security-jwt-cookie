@@ -23,13 +23,13 @@ include::{sourceDir}/build.gradle[tag=velocity]
 Create two velocity templates in `src/main/resources/views`:
 
 [source,html]
-.src/main/resources/templates/home.vm
+.src/main/resources/views/home.vm
 ----
-include::{sourceDir}/src/main/resources/templates/home.vm[]
+include::{sourceDir}/src/main/resources/views/home.vm[]
 ----
 
 [source,html]
-.src/main/resources/templates/auth.vm
+.src/main/resources/views/auth.vm
 ----
-include::{sourceDir}/src/main/resources/templates/auth.vm[]
+include::{sourceDir}/src/main/resources/views/auth.vm[]
 ----
