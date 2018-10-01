@@ -1,3 +1,3 @@
-# micronaut-security-jwt-cookie
+# Micronaut JWT authentication via Cookies #
 
-http://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html
+Guide: http://guides.micronaut.io/micronaut-security-jwt-cookie/guide/index.html
