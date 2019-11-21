@@ -1,18 +1,17 @@
 package example.micronaut
 
 import geb.spock.GebSpec
-import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
+import io.micronaut.test.annotation.MicronautTest
 import spock.lang.IgnoreIf
-import spock.lang.Shared
 
+import javax.inject.Inject
 //tag::clazz[]
+@MicronautTest // <1>
 class AuthenticationSpec extends GebSpec {
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer)
+    @Inject
+    EmbeddedServer embeddedServer // <2>
 
     @IgnoreIf({ !sys['geb.env'] })
     def "verify session based authentication works"() {

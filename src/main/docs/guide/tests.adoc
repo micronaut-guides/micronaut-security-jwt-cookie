@@ -23,3 +23,5 @@ Create a tests which verifies the user authentication flow.
 ----
 include::{sourceDir}/src/test/groovy/example/micronaut/AuthenticationSpec.groovy[tag=clazz]
 ----
+<1> Annotate the class with `@MicronautTest` to let Micronaut starts the embedded server and inject the beans. More info: https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html[https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html].
+<2> Inject the `EmbeddedServer` bean.

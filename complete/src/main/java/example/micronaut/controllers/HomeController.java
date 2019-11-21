@@ -18,8 +18,8 @@ public class HomeController {
     @View("home") // <4>
     Map<String, Object> index(@Nullable Principal principal) {  // <5>
         Map<String, Object> data = new HashMap<>();
-        data.put("loggedIn", principal!=null);
-        if (principal!=null) {
+        data.put("loggedIn", principal != null);
+        if (principal != null) {
             data.put("username", principal.getName());
         }
         return data;
