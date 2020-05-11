@@ -33,9 +33,7 @@ apply plugin:"net.ltgt.apt-idea"
 
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "https://jcenter.bintray.com" }
+    jcenter()
 }
 
 dependencyManagement {
