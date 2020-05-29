@@ -1,110 +1,104 @@
 plugins {
     id "net.ltgt.apt-eclipse" version "0.21"
-    id "com.github.johnrengelman.shadow" version "5.0.0"
-    id "application"
     id "groovy"
-    //tag::buildscriptDependenciesWebdriverBinaries[]
-    id "com.github.erdi.webdriver-binaries" version "2.1"
-    //end::buildscriptDependenciesWebdriverBinaries[]
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "application"
 }
 
 version "0.1"
-group "example"
+group "example.micronaut"
+
 
 repositories {
-    mavenCentral()
     jcenter()
+    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
 }
 
 configurations {
     // for dependencies that are needed for development only
     developmentOnly
+
+    all {
+        resolutionStrategy {
+            force 'io.micronaut:micronaut-security-annotations:2.0.0.BUILD-SNAPSHOT'
+            force 'io.micronaut:micronaut-security:2.0.0.BUILD-SNAPSHOT'
+            force 'io.micronaut:micronaut-security-jwt:2.0.0.BUILD-SNAPSHOT'
+        }
+    }
 }
 
 dependencies {
-    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut:micronaut-validation"
-    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation "io.micronaut:micronaut-inject"
-    implementation "io.micronaut:micronaut-validation"
-    implementation "io.micronaut:micronaut-runtime"
-    implementation "io.micronaut:micronaut-http-server-netty"
-    implementation "io.micronaut:micronaut-http-client"
+    annotationProcessor(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor("io.micronaut:micronaut-inject-java")
+    annotationProcessor("io.micronaut:micronaut-validation")
+    annotationProcessor("io.micronaut:micronaut-graal")
 
-    //tag::securitydependency[]
-    implementation "io.micronaut:micronaut-security-jwt"
-    //end::securitydependency[]
+    compileOnly(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    compileOnly("org.graalvm.nativeimage:svm")
+    implementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    implementation("io.micronaut:micronaut-inject")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-http-server-netty")
+    implementation("io.micronaut:micronaut-http-client")
 
-    //tag::velocity[]
-    implementation "io.micronaut:micronaut-views"
+//tag::securitydependency[]
+    annotationProcessor("io.micronaut:micronaut-security-annotations")
+    implementation("io.micronaut:micronaut-security-jwt")
+//end::securitydependency[]
+//tag::velocity[]
+    implementation "io.micronaut:micronaut-views-velocity"
     implementation "org.apache.velocity:velocity-engine-core:2.0"
-    //end::velocity[]
+//end::velocity[]
+//tag::geb[]
+    testImplementation "org.gebish:geb-spock:3.4"
+    testImplementation "org.seleniumhq.selenium:htmlunit-driver:2.35.1"
+    testRuntime 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+    testImplementation "org.seleniumhq.selenium:selenium-support:3.141.59"
+    testImplementation "org.seleniumhq.selenium:selenium-api:3.141.59"
+//end::geb[]
 
-    //tag::geb[]
-    testImplementation "org.gebish:geb-spock:$gebVersion"
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
-    //end::geb[]
-
-    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
-    //tag::spock[]
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    testImplementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation("org.spockframework:spock-core") {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
     }
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "io.micronaut.test:micronaut-test-spock"
-    //end::spock[]
-
-    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
-
-    testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
-    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "io.micronaut.test:micronaut-test-junit5"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.5.0"
+    testImplementation("io.micronaut.test:micronaut-test-spock")
 }
 
 test.classpath += configurations.developmentOnly
 
-mainClassName = "example.Application"
+mainClassName = "example.micronaut.Application"
+
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
 }
+
+java {
+    sourceCompatibility = JavaVersion.toVersion('1.8')
+    targetCompatibility = JavaVersion.toVersion('1.8')
+}
+
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
-    options.compilerArgs.add('-parameters')
+    options.compilerArgs.addAll([
+        '-parameters',
+        // enables incremental compilation
+        '-Amicronaut.processing.incremental=true',
+        '-Amicronaut.processing.annotations=example.micronaut.*'
+    ])
 }
 
 shadowJar {
     mergeServiceFiles()
 }
 
-run.classpath += configurations.developmentOnly
-run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
-
-//tag::webdriverBinaries[]
-webdriverBinaries {
-    chromedriver {
-        version = chromeDriverVersion
-    }
-    geckodriver {
-        version = geckoDriverVersion
-    }
+tasks.withType(JavaExec) {
+    classpath += configurations.developmentOnly
+    jvmArgs('-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
 }
-//end::webdriverBinaries[]
 
-//tag::taskWithTypeTest[]
-tasks.withType(Test) {
-    systemProperty "geb.env", System.getProperty('geb.env')
-    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
-    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
-}
-//end::taskWithTypeTest[]
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
