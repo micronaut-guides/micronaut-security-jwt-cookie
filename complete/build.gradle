@@ -1,132 +1,104 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
-        //tag::buildscriptDependenciesWebdriverBinaries[]
-        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:1.4"
-        //end::buildscriptDependenciesWebdriverBinaries[]
-    }
+plugins {
+    id "net.ltgt.apt-eclipse" version "0.21"
+    id "groovy"
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "application"
 }
 
 version "0.1"
-group "example"
-
-apply plugin:"io.spring.dependency-management"
-apply plugin:"com.github.johnrengelman.shadow"
-apply plugin:"application"
-//tag::applyPluginGroovy[]
-apply plugin:"groovy"
-//end::applyPluginGroovy[]
-//tag::applyPluginWebdriverBinaries[]
-apply plugin:"com.energizedwork.webdriver-binaries"
-//end::applyPluginWebdriverBinaries[]
-apply plugin:"net.ltgt.apt-eclipse"
-apply plugin:"net.ltgt.apt-idea"
+group "example.micronaut"
 
 
 repositories {
     jcenter()
+    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "io.micronaut:bom:$micronautVersion"
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly
+
+    all {
+        resolutionStrategy {
+            force 'io.micronaut:micronaut-security-annotations:2.0.0.BUILD-SNAPSHOT'
+            force 'io.micronaut:micronaut-security:2.0.0.BUILD-SNAPSHOT'
+            force 'io.micronaut:micronaut-security-jwt:2.0.0.BUILD-SNAPSHOT'
+        }
     }
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:inject-java"
-    compile "io.micronaut:http-server-netty"
-    compile "io.micronaut:inject"
-    compile "io.micronaut:runtime"
-    compile "io.micronaut:http-client"
-    compileOnly "io.micronaut:inject-java"
-    runtime "ch.qos.logback:logback-classic:1.2.3"
-    testCompile "junit:junit:4.12"
-    testCompile "io.micronaut:inject-java"
+    annotationProcessor(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor("io.micronaut:micronaut-inject-java")
+    annotationProcessor("io.micronaut:micronaut-validation")
+    annotationProcessor("io.micronaut:micronaut-graal")
+
+    compileOnly(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    compileOnly("org.graalvm.nativeimage:svm")
+    implementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    implementation("io.micronaut:micronaut-inject")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-http-server-netty")
+    implementation("io.micronaut:micronaut-http-client")
+
 //tag::securitydependency[]
-    compile "io.micronaut:security-jwt"
+    annotationProcessor("io.micronaut:micronaut-security-annotations")
+    implementation("io.micronaut:micronaut-security-jwt")
 //end::securitydependency[]
 //tag::velocity[]
-    compile "io.micronaut:views"
-    compile "org.apache.velocity:velocity-engine-core:2.0"
+    implementation "io.micronaut:micronaut-views-velocity"
+    implementation "org.apache.velocity:velocity-engine-core:2.0"
 //end::velocity[]
 //tag::geb[]
-    testCompile "org.gebish:geb-spock:2.1"
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.6.0"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.6.0"
-    testCompile "org.seleniumhq.selenium:selenium-support:3.6.0"
-    testCompile "org.seleniumhq.selenium:selenium-api:3.6.0"
+    testImplementation "org.gebish:geb-spock:3.4"
+    testImplementation "org.seleniumhq.selenium:htmlunit-driver:2.35.1"
+    testRuntime 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+    testImplementation "org.seleniumhq.selenium:selenium-support:3.141.59"
+    testImplementation "org.seleniumhq.selenium:selenium-api:3.141.59"
 //end::geb[]
-//tag::spock[]
-    testCompile "org.codehaus.groovy:groovy-all:2.5.0"
-    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
-//end::spock[]
+
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    testImplementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testImplementation("io.micronaut:micronaut-inject-groovy")
+    testImplementation("org.spockframework:spock-core") {
+        exclude group: "org.codehaus.groovy", module: "groovy-all"
+    }
+    testImplementation("io.micronaut.test:micronaut-test-spock")
+}
+
+test.classpath += configurations.developmentOnly
+
+mainClassName = "example.micronaut.Application"
+
+// use JUnit 5 platform
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion('1.8')
+    targetCompatibility = JavaVersion.toVersion('1.8')
+}
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.addAll([
+        '-parameters',
+        // enables incremental compilation
+        '-Amicronaut.processing.incremental=true',
+        '-Amicronaut.processing.annotations=example.micronaut.*'
+    ])
 }
 
 shadowJar {
     mergeServiceFiles()
 }
 
-mainClassName = "example.Application"
-compileJava.options.compilerArgs += '-parameters'
-compileTestJava.options.compilerArgs += '-parameters'
-
-//tag::webdriverBinaries[]
-webdriverBinaries {
-    chromedriver '2.40'
-    geckodriver '0.21.0'
+tasks.withType(JavaExec) {
+    classpath += configurations.developmentOnly
+    jvmArgs('-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
 }
-//end::webdriverBinaries[]
 
-//tag::taskWithTypeTest[]
-tasks.withType(Test) {
-    systemProperty "geb.env", System.getProperty('geb.env')
-    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
-    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
-}
-//end::taskWithTypeTest[]
 
-tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
-        exceptionFormat TestExceptionFormat.FULL
-        showExceptions true
-        showCauses true
-        showStackTraces true
 
-        // set options for log level DEBUG and INFO
-        debug {
-            events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
-}

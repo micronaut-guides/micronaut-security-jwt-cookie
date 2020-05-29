@@ -4,7 +4,6 @@ import geb.spock.GebSpec
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
-import spock.lang.IgnoreIf
 import spock.lang.Shared
 
 //tag::clazz[]
@@ -14,7 +13,6 @@ class AuthenticationSpec extends GebSpec {
     @AutoCleanup
     EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer)
 
-    @IgnoreIf({ !sys['geb.env'] })
     def "verify session based authentication works"() {
         given:
         browser.baseUrl = "http://localhost:${embeddedServer.port}"
