@@ -47,8 +47,7 @@ dependencies {
     implementation("io.micronaut.security:micronaut-security-jwt")
 //end::securitydependency[]
 //tag::velocity[]
-    implementation "io.micronaut:micronaut-views-velocity"
-    implementation "org.apache.velocity:velocity-engine-core:2.0"
+    implementation "io.micronaut.views:micronaut-views-velocity"
 //end::velocity[]
 //tag::geb[]
     testImplementation "org.gebish:geb-spock:3.4"
