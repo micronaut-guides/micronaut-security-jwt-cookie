@@ -17,14 +17,6 @@ repositories {
 configurations {
     // for dependencies that are needed for development only
     developmentOnly
-
-    all {
-        resolutionStrategy {
-            force 'io.micronaut:micronaut-security-annotations:2.0.0.BUILD-SNAPSHOT'
-            force 'io.micronaut:micronaut-security:2.0.0.BUILD-SNAPSHOT'
-            force 'io.micronaut:micronaut-security-jwt:2.0.0.BUILD-SNAPSHOT'
-        }
-    }
 }
 
 dependencies {
